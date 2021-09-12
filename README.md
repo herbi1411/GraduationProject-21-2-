@@ -23,4 +23,4 @@ ___
 
 날짜|내역
 ---|---|
-<span style="color:red">09.12</span>| Git repository 생성
+<span style="color:red">09.12</span>| Git repository 생성, Flask에서 판독한 이미지 React로 전송 한 후에 웹페이지에 보이기

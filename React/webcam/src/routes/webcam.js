@@ -14,6 +14,8 @@ const WebcamCapture = () => {
 
     const [timer,setTimer] = useState(0);
     const [timerOn, setTimerOn] = useState(false);
+    const [returnImgSrc,setReturnImgSrc] = useState("");
+    const [blinkCount,setBlinkCount] = useState(0);
     // useEffect(()=>{
     //   const timerid = setTimeout(()=>{
     //   capture();
@@ -49,7 +51,7 @@ const WebcamCapture = () => {
     
     useEffect(()=>{
       if(timerOn){
-        const id = setInterval(capture,2000);
+        const id = setInterval(capture,300);
         return () => clearInterval(id);
       }
     },[timerOn]);
@@ -57,7 +59,7 @@ const WebcamCapture = () => {
 
     const toggleSetTimerOn = () => {setTimerOn(prev => !prev)}
     //
-     const webcamRef = React.useRef(null);
+    const webcamRef = React.useRef(null);
     const capture = React.useCallback(
       () => {
         const imageSrc = webcamRef.current.getScreenshot();
@@ -66,7 +68,16 @@ const WebcamCapture = () => {
           "genre" : "dsda",
           "year" : 1985,
           "data" : imageSrc
-        },{headers: { "Content-Type": `application/json`}}).then(response => console.log(response)).catch((err)=>console.log(err));
+        },{headers: { "Content-Type": `application/json`}}).then(response => {
+
+          // console.log(response);
+          const returnImageSrc = response.data.data;
+          const isBlink = response.data.pred;
+          // console.log(returnImageSrc);
+          setReturnImgSrc(returnImageSrc);
+          if(isBlink) setBlinkCount(prev => prev+1);
+        }
+        ).catch((err)=>console.log(err));
       },
       [webcamRef]
     );
@@ -101,6 +112,8 @@ const WebcamCapture = () => {
           <button onClick={toggleSetTimerOn}>Capture</button>
           <button /*onClick={()=>setTimer(1)}*/>Capture photo</button>
           </Grid>
+          {timerOn ? <img src={returnImgSrc}/> : <img src=""/>}
+          <span>Blink Count : {blinkCount}</span>
           {/* {timer} */}
         </>
     );

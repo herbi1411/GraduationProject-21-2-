@@ -10,7 +10,7 @@ class imageDiscriminator:
         self.detector = dlib.get_frontal_face_detector()
         self.predictor = dlib.shape_predictor('models/shape_predictor_68_face_landmarks.dat')
         self.model = load_model('models/2021_09_09_21_02_36.h5')
-        self.model.summary()
+        # self.model.summary()
 
 
     def crop_eye(self, gray, eye_points):
@@ -91,4 +91,4 @@ class imageDiscriminator:
             cv2.putText(img, state_l, tuple(eye_rect_l[0:2]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
             cv2.putText(img, state_r, tuple(eye_rect_r[0:2]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
             # cv2.imshow('result', img)
-        return (img, pred_l > 0.1 or pred_r > 0.1)
+        return (img, pred_l < 0.1 and pred_r < 0.1)
