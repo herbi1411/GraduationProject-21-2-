@@ -5,13 +5,15 @@ import AppRouter from "./Router";
 function App() {
   const [init,setInit] = useState(false);
   const [isLoggedIn,setIsLoggedin] = useState(false);
-
+  const [userObj,setUserObj] = useState(null);
   useEffect(()=>{
     authService.onAuthStateChanged((user)=>{
       if(user){
         setIsLoggedin(true);
+        setUserObj(user);
       }else{
         setIsLoggedin(false);
+        setUserObj(null);
       }
       setInit(true);
     });
@@ -20,7 +22,7 @@ function App() {
 
   return (
     <>
-    {init ? <AppRouter isLoggedIn = {isLoggedIn}/> : "Initiallizing...."}
+    {init ? <AppRouter isLoggedIn = {isLoggedIn} userObj = {userObj}/> : "Initiallizing...."}
     {/* <footer> &copy;{new Date().getFullYear()} Nwitter-temp</footer> */}
     </>
   );

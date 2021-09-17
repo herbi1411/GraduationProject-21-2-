@@ -7,8 +7,9 @@ import Profile from "routes/Profile";
 import WebcamCapture from "../routes/webcam";
 import TabTutorial from "routes/taptutorials";
 import Test from "routes/Test";
+import Chart from "routes/Chart";
 
-const AppRouter = ({isLoggedIn})=>{
+const AppRouter = ({isLoggedIn, userObj})=>{
     return (
         <Router>
             {isLoggedIn && <TabTutorial/>}
@@ -22,10 +23,13 @@ const AppRouter = ({isLoggedIn})=>{
                     <Profile/>
                 </Route>
                 <Route exact path = "/webcam">
-                    <WebcamCapture/>
+                    <WebcamCapture userObj = {userObj}/>
                 </Route>
                 <Route exact path = "/log">
                     <Test/>
+                </Route>
+                <Route exact path = "/chart">
+                    <Chart userObj = {userObj}/>
                 </Route>
                 </>
                 :

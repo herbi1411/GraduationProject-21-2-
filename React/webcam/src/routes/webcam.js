@@ -3,14 +3,14 @@ import Webcam from "react-webcam";
 import axios from "axios";
 import "./webcam.css";
 import { Grid } from "@material-ui/core";
+import { dbService } from "fbase";
 const videoConstraints = {
     width: 1280,
     height: 720,
     facingMode: "user"
   };
 
-
-const WebcamCapture = () => {
+const WebcamCapture = ({userObj}) => {
 
     const [timer,setTimer] = useState(0);
     const [timerOn, setTimerOn] = useState(false);
@@ -58,6 +58,13 @@ const WebcamCapture = () => {
 
 
     const toggleSetTimerOn = () => {setTimerOn(prev => !prev)}
+    const writeLog = async() =>{
+      await dbService.collection("log").add({
+        // blinkAt: getCurrentDate(),
+        blinkAt: Date.now(),
+        uid: userObj.uid
+      });
+    }
     //
     const webcamRef = React.useRef(null);
     const capture = React.useCallback(
@@ -68,14 +75,17 @@ const WebcamCapture = () => {
           "genre" : "dsda",
           "year" : 1985,
           "data" : imageSrc
-        },{headers: { "Content-Type": `application/json`}}).then(response => {
+        },{headers: { "Content-Type": `application/json`}}).then(response =>{
 
           // console.log(response);
           const returnImageSrc = response.data.data;
           const isBlink = response.data.pred;
           // console.log(returnImageSrc);
           setReturnImgSrc(returnImageSrc);
-          if(isBlink) setBlinkCount(prev => prev+1);
+          if(isBlink){
+            setBlinkCount(prev => prev+1);
+            writeLog();
+          } 
         }
         ).catch((err)=>console.log(err));
       },
