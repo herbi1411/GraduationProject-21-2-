@@ -16,38 +16,6 @@ const WebcamCapture = ({userObj}) => {
     const [timerOn, setTimerOn] = useState(false);
     const [returnImgSrc,setReturnImgSrc] = useState("");
     const [blinkCount,setBlinkCount] = useState(0);
-    // useEffect(()=>{
-    //   const timerid = setTimeout(()=>{
-    //   capture();
-    //   // testFunc();
-    //   console.log("실행중!!");
-    //   setTimer((prev)=>prev+1);
-    // },1000);
-    // return  ()=>clearTimeout(timerid);
-    // },[timer]);
-    //
-
-
-    //
-    // const useInterval = (callback,delay) =>{
-    //   const savedCallback = React.useRef();
-
-    //   useEffect(()=>{
-    //     savedCallback.current = callback;
-    //   });
-      
-    //   useEffect(()=>{
-    //     const tick = () =>{
-    //       savedCallback.current();
-    //     }
-        
-    //     let id = setInterval(tick,delay);
-    //     return () => clearInterval(id);
-    //   },[delay]);
-
-    // }
-
-    // useInterval(()=>{setTimer((prev)=>(prev+1))},1000);
     
     useEffect(()=>{
       if(timerOn){
@@ -92,23 +60,10 @@ const WebcamCapture = ({userObj}) => {
       [webcamRef]
     );
     
-    const testFunc = () => {console.log("I'm test Function!!");}
-    // const capture = () => {
-    //     const imageSrc = webcamRef.current.getScreenshot();
-    //     if(imageSrc !== null){
-    //       console.log(imageSrc)
-    //       axios.post("/fileUpload",{
-    //         "title" : "???",
-    //         "genre" : "dsda",
-    //         "year" : 1985,
-    //         "data" : imageSrc
-    //       },{headers: { "Content-Type": `application/json`}}).then(response => console.log(response)).catch((err)=>console.log(err));
-    //     }
-    //   }
-
     return (
         <>
           <Grid item xs>
+          {timerOn && <img src={returnImgSrc}/>}
           <Webcam
             className = "ha"
             audio={false}
@@ -120,9 +75,7 @@ const WebcamCapture = ({userObj}) => {
           />
           {/* <button onClick={capture}>Capture</button> */}
           <button onClick={toggleSetTimerOn}>Capture</button>
-          <button /*onClick={()=>setTimer(1)}*/>Capture photo</button>
           </Grid>
-          {timerOn ? <img src={returnImgSrc}/> : <img src=""/>}
           <span>Blink Count : {blinkCount}</span>
           {/* {timer} */}
         </>

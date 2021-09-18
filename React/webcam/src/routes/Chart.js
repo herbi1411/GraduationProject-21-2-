@@ -2,23 +2,55 @@ import React, { useState, useEffect } from "react";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead"
-import TableBody from "@material-ui/core/TableBody"
+import TableHead from "@material-ui/core/TableHead";
+import TableBody from "@material-ui/core/TableBody";
 import { dbService } from "fbase";
-const Chart = ({userObj}) => {
+import {makeStyles} from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import { TableContainer } from "@material-ui/core";
+import TablePagination from '@material-ui/core/TablePagination';
 
+const columns = [
+    {id: 'oid', label: '번호', minWidth: 100},
+    {id: 'date', label: '날짜', minWidth: 170},
+    {id: 'time', label: '시간', minWidth: 170}
+];
+const useStyles = makeStyles({
+    root:{
+        width: '100%',
+    },
+    container:{
+        maxHeight: 440,
+    }
+});
+
+const Chart = ({userObj}) => {
+    const classes = useStyles();
+    const [page,setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [logs, setLogs] = useState(null);
 
+    const handleChangePage = (event,newPage) => {setPage(newPage)};
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    }
     const getLogs = async() =>{
 
         let logContainer = [];
+        let idx = 0;
         dbService.collection("log").where("uid","==",userObj.uid).orderBy("blinkAt","asc").get().then((querySnapshot)=>{
 
             querySnapshot.forEach((doc)=>{
+                const dateArray = makeDateArray(doc.data().blinkAt);
                 const docObject = {
+                    oid: idx + 1,
                     id: doc.id,
-                    ...doc.data(),
+                    date: dateArray[0],
+                    time: dateArray[1],
+                    // ...doc.data(),
                 };
+                idx+=1;
                 logContainer.push(docObject);
             });
             setLogs(logContainer);
@@ -52,36 +84,69 @@ const Chart = ({userObj}) => {
 
         return [year + "년 " + month +"월 " + day + "일 " , hour + "시 " + minute + "분 " + second + "초"];
     }
-    return <div>
+    return (
+    <Paper className ={classes.root}>
         {logs? <>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            날짜
-                        </TableCell>
-                        <TableCell>
-                            시간
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                   {logs.map(element => (
-                        <TableRow key={element.id}>
-                                {makeDateArray(element.blinkAt).map((element)=>(
-                                    <TableCell>
-                                        {element}
-                                    </TableCell>
-                                ))}
+            <TableContainer className = {classes.conatiner}>
+                <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                        <TableRow>
+                            {columns.map((column)=>(
+                                <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                    style={{minWidth: column.minWidth}}
+                                >
+                                    {column.label}
+                                </TableCell>
+                            ))}
                         </TableRow>
-                    )    
-                    )}
-                </TableBody>
-            </Table>
-            <h4>{userObj.uid}</h4>
-            <h4>Chart</h4>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            logs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((log)=>(
+                                <TableRow hover role="checkbox" tabIndex = {-1} key={log.id}>
+                                    {
+                                        columns.map((column)=>{
+                                            const value = log[column.id];
+                                            return (
+                                                <TableCell key = {column.id} align={column.align}>
+                                                    {value}
+                                                </TableCell>
+                                            );
+                                        })
+                                    }
+                                </TableRow>
+                            ))
+                        }
+                    
+                    {/* {logs.map(element => (
+                            <TableRow key={element.id}>
+                                    <TableCell>
+                                        {element.oid}
+                                    </TableCell>
+                                    {makeDateArray(element.blinkAt).map((element)=>(
+                                        <TableCell key={element}>
+                                            {element}
+                                        </TableCell>
+                                    ))}
+                            </TableRow>
+                        )    
+                        )} */}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[10,25,50, {value: -1, label: 'All'}]}
+                component="div"
+                count={logs.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange = {handleChangeRowsPerPage}
+            />
         </>: "Loading..."}
-        </div>
+    </Paper>);
 }
 
 
