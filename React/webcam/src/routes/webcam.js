@@ -17,6 +17,10 @@ const WebcamCapture = ({userObj}) => {
     const [returnImgSrc,setReturnImgSrc] = useState("");
     const [blinkCount,setBlinkCount] = useState(0);
     
+    const getWebCamStyleObject = () =>{
+      return timerOn ? {visibility: "hidden"} : {visibility: "visible"};
+    };
+
     useEffect(()=>{
       if(timerOn){
         const id = setInterval(capture,300);
@@ -63,16 +67,19 @@ const WebcamCapture = ({userObj}) => {
     return (
         <>
           <Grid item xs>
-          {timerOn && <img src={returnImgSrc}/>}
-          <Webcam
-            className = "ha"
-            audio={false}
-            height={320}
-            ref={webcamRef}
-            screenshotFormat="image/jpeg"
-            width={480}
-            videoConstraints={videoConstraints}
-          />
+            <Grid>
+                {timerOn && <img src={returnImgSrc}/>}
+                <Webcam
+                  style = {getWebCamStyleObject()}
+                  className = "ha"
+                  audio={false}
+                  height={320}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  width={480}
+                  videoConstraints={videoConstraints}
+                />
+            </Grid> 
           {/* <button onClick={capture}>Capture</button> */}
           <button onClick={toggleSetTimerOn}>Capture</button>
           </Grid>
