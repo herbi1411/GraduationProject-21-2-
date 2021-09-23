@@ -3,6 +3,12 @@ import Webcam from "react-webcam";
 import axios from "axios";
 import "./webcam.css";
 import { Grid } from "@material-ui/core";
+import FormLabel from '@mui/material/FormLabel';
+import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import Switch from '@mui/material/Switch';
 import { dbService } from "fbase";
 const videoConstraints = {
     width: 1280,
@@ -12,12 +18,11 @@ const videoConstraints = {
 
 const WebcamCapture = ({userObj}) => {
 
-    const [timer,setTimer] = useState(0);
     const [timerOn, setTimerOn] = useState(false);
     const [returnImgSrc,setReturnImgSrc] = useState("");
     const [blinkCount,setBlinkCount] = useState(0);
    
-    let prevBlink = 0;
+    let prevBlink = Date.now();
     const setPrevBlink = (now) => {prevBlink = now;}
     const getWebCamStyleObject = () =>{
       return timerOn ? {visibility: "hidden"} : {visibility: "visible"};
@@ -25,25 +30,25 @@ const WebcamCapture = ({userObj}) => {
 
     useEffect(()=>{
       if(timerOn){
+        Notification.requestPermission();
         const id = setInterval(capture,150);
         return () => clearInterval(id);
       }
     },[timerOn]);
-
-    useEffect(()=>{
-      prevBlink = Date.now();
-    },[])
-    const toggleSetTimerOn = () => {setTimerOn(prev => !prev)}
+    
+    const toggleSetTimerOn = () => {
+      setPrevBlink(Date.now());
+      setTimerOn(prev => !prev)
+    }
     const writeLog = async() =>{
       await dbService.collection("log").add({
         blinkAt: Date.now(),
         uid: userObj.uid
       });
     }
-    //
+
     const webcamRef = React.useRef(null);
-    const capture = React.useCallback(
-      () => {
+    const capture = () => {
         const imageSrc = webcamRef.current.getScreenshot();
         axios.post("/fileUpload",{
           "title" : "???",
@@ -55,10 +60,20 @@ const WebcamCapture = ({userObj}) => {
           const returnImageSrc = response.data.data;
           const isBlink = response.data.pred;
           setReturnImgSrc(returnImageSrc);
+
+          //
+          const elapsedTime = Date.now() - prevBlink;
+          console.log(elapsedTime);
+          if(elapsedTime >= 10000){
+            Notification.requestPermission().then(() =>{
+              const notification = new Notification("Hello!",{body: "Please blink you eyes"});
+            }); 
+            setPrevBlink(Date.now());
+          }
+          //
+
           if(isBlink){
-            if(Date.now() - prevBlink >= 3000){
-              // console.log("Date.now : ", Date.now());
-              // console.log("PrevBlink: ",prevBlink);
+            if(elapsedTime >= 2000){
               setBlinkCount(prev => prev+1);
               setPrevBlink(Date.now());
               writeLog();
@@ -66,10 +81,8 @@ const WebcamCapture = ({userObj}) => {
           }   
         }
         ).catch((err)=>console.log(err));
-      },
-      [webcamRef]
-    );
-    
+      }
+
     return (
         <>
           <Grid item xs>
@@ -85,8 +98,20 @@ const WebcamCapture = ({userObj}) => {
                   width={480}
                   videoConstraints={videoConstraints}
                 />
-            </Grid> 
-          <button onClick={toggleSetTimerOn}>Capture</button>
+            </Grid>
+            <FormControl component="fieldset" variant="standard">
+              <FormLabel component="legend">Assign responsibility</FormLabel>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Switch checked={timerOn} onChange={toggleSetTimerOn} name="timerOn" color="secondary"/>
+                  }
+                  label="Capture"
+                />
+              </FormGroup>
+              <FormHelperText>Be careful</FormHelperText>
+          </FormControl> 
+          {/* <button onClick={toggleSetTimerOn}>Capture</button> */}
           </Grid>
           <h5>Blink Count : {blinkCount}</h5>
         </>
