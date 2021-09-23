@@ -16,23 +16,26 @@ const WebcamCapture = ({userObj}) => {
     const [timerOn, setTimerOn] = useState(false);
     const [returnImgSrc,setReturnImgSrc] = useState("");
     const [blinkCount,setBlinkCount] = useState(0);
-    
+   
+    let prevBlink = 0;
+    const setPrevBlink = (now) => {prevBlink = now;}
     const getWebCamStyleObject = () =>{
       return timerOn ? {visibility: "hidden"} : {visibility: "visible"};
     };
 
     useEffect(()=>{
       if(timerOn){
-        const id = setInterval(capture,300);
+        const id = setInterval(capture,150);
         return () => clearInterval(id);
       }
     },[timerOn]);
 
-
+    useEffect(()=>{
+      prevBlink = Date.now();
+    },[])
     const toggleSetTimerOn = () => {setTimerOn(prev => !prev)}
     const writeLog = async() =>{
       await dbService.collection("log").add({
-        // blinkAt: getCurrentDate(),
         blinkAt: Date.now(),
         uid: userObj.uid
       });
@@ -49,15 +52,18 @@ const WebcamCapture = ({userObj}) => {
           "data" : imageSrc
         },{headers: { "Content-Type": `application/json`}}).then(response =>{
 
-          // console.log(response);
           const returnImageSrc = response.data.data;
           const isBlink = response.data.pred;
-          // console.log(returnImageSrc);
           setReturnImgSrc(returnImageSrc);
           if(isBlink){
-            setBlinkCount(prev => prev+1);
-            writeLog();
-          } 
+            if(Date.now() - prevBlink >= 3000){
+              // console.log("Date.now : ", Date.now());
+              // console.log("PrevBlink: ",prevBlink);
+              setBlinkCount(prev => prev+1);
+              setPrevBlink(Date.now());
+              writeLog();
+            }
+          }   
         }
         ).catch((err)=>console.log(err));
       },
@@ -80,11 +86,9 @@ const WebcamCapture = ({userObj}) => {
                   videoConstraints={videoConstraints}
                 />
             </Grid> 
-          {/* <button onClick={capture}>Capture</button> */}
           <button onClick={toggleSetTimerOn}>Capture</button>
           </Grid>
-          <span>Blink Count : {blinkCount}</span>
-          {/* {timer} */}
+          <h5>Blink Count : {blinkCount}</h5>
         </>
     );
 };

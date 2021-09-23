@@ -38,8 +38,8 @@ class imageDiscriminator:
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         faces = self.detector(gray)
-        pred_l = 0
-        pred_r = 0
+        pred_l = 1
+        pred_r = 1
 
         for face in faces:
             shapes = self.predictor(gray, face)

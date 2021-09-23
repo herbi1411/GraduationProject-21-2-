@@ -39,7 +39,7 @@ const Chart = ({userObj}) => {
 
         let logContainer = [];
         let idx = 0;
-        dbService.collection("log").where("uid","==",userObj.uid).orderBy("blinkAt","asc").get().then((querySnapshot)=>{
+        dbService.collection("log").where("uid","==",userObj.uid).orderBy("blinkAt","desc").get().then((querySnapshot)=>{
 
             querySnapshot.forEach((doc)=>{
                 const dateArray = makeDateArray(doc.data().blinkAt);
