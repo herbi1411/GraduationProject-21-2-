@@ -23,6 +23,10 @@ const WebcamCapture = ({userObj}) => {
     const [blinkCount,setBlinkCount] = useState(0);
    
     let prevBlink = Date.now();
+    let startRecordAt = Date.now();
+    let endRecordAt = Date.now();
+    let tempBlinkCount = 0;
+
     const setPrevBlink = (now) => {prevBlink = now;}
     const getWebCamStyleObject = () =>{
       return timerOn ? {visibility: "hidden"} : {visibility: "visible"};
@@ -31,8 +35,20 @@ const WebcamCapture = ({userObj}) => {
     useEffect(()=>{
       if(timerOn){
         Notification.requestPermission();
+        startRecordAt = Date.now();
         const id = setInterval(capture,150);
-        return () => clearInterval(id);
+        return async() => {
+          endRecordAt = Date.now();
+          const avgBlinkPeriod = ((endRecordAt - startRecordAt)/tempBlinkCount);
+          await dbService.collection("usageHistory").add({
+            uid: userObj.uid,
+            startRecordAt,
+            blinkCount: tempBlinkCount,
+            endRecordAt,
+            avgBlinkPeriod,
+          });
+          clearInterval(id);
+        }
       }
     },[timerOn]);
     
@@ -63,7 +79,7 @@ const WebcamCapture = ({userObj}) => {
 
           //
           const elapsedTime = Date.now() - prevBlink;
-          console.log(elapsedTime);
+          // console.log(elapsedTime);
           if(elapsedTime >= 10000){
             Notification.requestPermission().then(() =>{
               const notification = new Notification("Hello!",{body: "Please blink you eyes"});
@@ -75,8 +91,9 @@ const WebcamCapture = ({userObj}) => {
           if(isBlink){
             if(elapsedTime >= 2000){
               setBlinkCount(prev => prev+1);
+              tempBlinkCount+=1;
               setPrevBlink(Date.now());
-              writeLog();
+              // writeLog();
             }
           }   
         }

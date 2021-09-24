@@ -8,6 +8,7 @@ import WebcamCapture from "../routes/webcam";
 import TabTutorial from "routes/taptutorials";
 import Test from "routes/Test";
 import Chart from "routes/Chart";
+import UseageHistory from "routes/UseageHistory";
 
 const AppRouter = ({isLoggedIn, userObj})=>{
     return (
@@ -30,6 +31,9 @@ const AppRouter = ({isLoggedIn, userObj})=>{
                 </Route>
                 <Route exact path = "/chart">
                     <Chart userObj = {userObj}/>
+                </Route>
+                <Route exact path = "/usage-history">
+                    <UseageHistory userObj = {userObj}/>
                 </Route>
                 </>
                 :

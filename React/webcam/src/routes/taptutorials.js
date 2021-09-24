@@ -14,7 +14,8 @@ class TabTutorial extends Component {
     const currentPath = this.props.location.pathname;
     let value = 0;
     if (currentPath === '/log') value = 1;
-    else if (currentPath === '/chart') value = 2; 
+    else if (currentPath === '/chart') value = 2;
+    else if (currentPath === '/usage-history') value = 3;
     this.state = {
       value
     }
@@ -53,6 +54,7 @@ class TabTutorial extends Component {
                 <Tab label="Item One" component = {Link} to="/webcam" {...this.a11yProps(0)} />
                 <Tab label="Item Two" component = {Link} to="/log" {...this.a11yProps(1)} />
                 <Tab label="Item Three" component = {Link} to="/chart" {...this.a11yProps(2)} />
+                <Tab label="usage-history" component = {Link} to="/usage-history" {...this.a11yProps(3)} />
               </Tabs>
             </Grid>
             <Grid>
