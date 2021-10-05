@@ -38,6 +38,7 @@ const WebcamCapture = ({userObj}) => {
         startRecordAt = Date.now();
         const id = setInterval(capture,150);
         return async() => {
+          clearInterval(id);
           endRecordAt = Date.now();
           const avgBlinkPeriod = ((endRecordAt - startRecordAt)/tempBlinkCount);
           await dbService.collection("usageHistory").add({
@@ -47,7 +48,6 @@ const WebcamCapture = ({userObj}) => {
             endRecordAt,
             avgBlinkPeriod,
           });
-          clearInterval(id);
         }
       }
     },[timerOn]);
@@ -110,6 +110,7 @@ const WebcamCapture = ({userObj}) => {
                   className = "ha"
                   audio={false}
                   height={320}
+                  mirrored = {true}
                   ref={webcamRef}
                   screenshotFormat="image/jpeg"
                   width={480}
