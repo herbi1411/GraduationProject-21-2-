@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import Webcam from "react-webcam";
 import axios from "axios";
 import "./webcam.css";
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
@@ -15,13 +16,20 @@ const videoConstraints = {
     height: 720,
     facingMode: "user"
   };
+  const useStyles = makeStyles({
+    label:{
+        "font-family" : "'카페24 당당해', '맑은 고딕', serif",
+    }
+});
 
 const WebcamCapture = ({userObj}) => {
 
     const [timerOn, setTimerOn] = useState(false);
     const [returnImgSrc,setReturnImgSrc] = useState("");
     const [blinkCount,setBlinkCount] = useState(0);
-   
+    const [avgBlinkTime,setAvgBlinkTime] = useState(0);
+
+    const classes = useStyles()
     let prevBlink = Date.now();
     let startRecordAt = Date.now();
     let endRecordAt = Date.now();
@@ -92,6 +100,7 @@ const WebcamCapture = ({userObj}) => {
             if(elapsedTime >= 2000){
               setBlinkCount(prev => prev+1);
               tempBlinkCount+=1;
+              setAvgBlinkTime(((Date.now() - startRecordAt) / 1000 / tempBlinkCount).toFixed(2));
               setPrevBlink(Date.now());
               // writeLog();
             }
@@ -118,13 +127,14 @@ const WebcamCapture = ({userObj}) => {
                 />
             </Grid>
             <FormControl component="fieldset" variant="standard">
-              <FormLabel component="legend">Assign responsibility</FormLabel>
-              <FormGroup>
-                <FormControlLabel
+              <FormLabel component="legend" className={classes.label}>설정</FormLabel>
+              <FormGroup >
+                <FormControlLabel 
+                  label= {<Typography className={classes.label}>눈 깜빡임 추적 시작</Typography>}
+                  labelPlacement="start"
                   control={
                     <Switch checked={timerOn} onChange={toggleSetTimerOn} name="timerOn" color="secondary"/>
                   }
-                  label="Capture"
                 />
               </FormGroup>
               <FormHelperText>Be careful</FormHelperText>
@@ -132,6 +142,7 @@ const WebcamCapture = ({userObj}) => {
           {/* <button onClick={toggleSetTimerOn}>Capture</button> */}
           </Grid>
           <h5>Blink Count : {blinkCount}</h5>
+          <h5>평균 눈깜빡임 시간 : {avgBlinkTime}</h5>
         </>
     );
 };

@@ -24,6 +24,9 @@ class TabTutorial extends Component {
     return {
       id: `simple-tab-${index}`,
       'aria-controls': `simple-tabpanel-${index}`,
+      style: {
+        "font-family": "'카페24 당당해', '맑은 고딕', serif",
+      },
     };
   }
   handleChange = (event, newValue) => {
@@ -51,10 +54,10 @@ class TabTutorial extends Component {
           <Toolbar>
             <Grid item xs>
               <Tabs value={this.state.value} onChange={this.handleChange} aria-label="simple tabs example">
-                <Tab label="Item One" component = {Link} to="/webcam" {...this.a11yProps(0)} />
-                <Tab label="Item Two" component = {Link} to="/log" {...this.a11yProps(1)} />
-                <Tab label="Item Three" component = {Link} to="/chart" {...this.a11yProps(2)} />
-                <Tab label="usage-history" component = {Link} to="/usage-history" {...this.a11yProps(3)} />
+                <Tab label="눈 깜빡임 탐지" component = {Link} to="/webcam" {...this.a11yProps(0)} />
+                <Tab label="테스트" component = {Link} to="/log" {...this.a11yProps(1)} />
+                <Tab label="알림 기록" component = {Link} to="/chart" {...this.a11yProps(2)} />
+                <Tab label="사용 기록" component = {Link} to="/usage-history" {...this.a11yProps(3)} />
               </Tabs>
             </Grid>
             <Grid>

@@ -23,9 +23,13 @@ const columns = [
 const useStyles = makeStyles({
     root:{
         width: '100%',
+
     },
     container:{
         maxHeight: 440,
+    },
+    rows:{
+        "font-family" : "'카페24 당당해', '맑은 고딕', serif",
     }
 });
 
@@ -118,7 +122,7 @@ const UseageHistory = ({userObj}) => {
             <TableContainer className = {classes.conatiner}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
-                        <TableRow>
+                        <TableRow >
                             {columns.map((column)=>(
                                 <TableCell
                                     key={column.id}
@@ -138,7 +142,7 @@ const UseageHistory = ({userObj}) => {
                                         columns.map((column)=>{
                                             const value = log[column.id];
                                             return (
-                                                <TableCell key = {column.id} align={column.align}>
+                                                <TableCell key = {column.id} align={column.align} className ={classes.rows}>
                                                     {value}
                                                 </TableCell>
                                             );
