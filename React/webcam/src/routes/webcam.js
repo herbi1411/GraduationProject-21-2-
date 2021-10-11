@@ -90,7 +90,7 @@ const WebcamCapture = ({userObj}) => {
           // console.log(elapsedTime);
           if(elapsedTime >= 10000){
             Notification.requestPermission().then(() =>{
-              const notification = new Notification("Hello!",{body: "Please blink you eyes"});
+              const notification = new Notification("눈을 감아주세요!",{body: "10초동안 눈을 감지 않으셨습니다."});
             }); 
             setPrevBlink(Date.now());
           }
