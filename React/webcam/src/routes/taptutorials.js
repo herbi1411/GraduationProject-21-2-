@@ -16,6 +16,7 @@ class TabTutorial extends Component {
     if (currentPath === '/log') value = 1;
     else if (currentPath === '/chart') value = 2;
     else if (currentPath === '/usage-history') value = 3;
+    else if (currentPath === '/highchart') value = 4;
     this.state = {
       value
     }
@@ -58,6 +59,7 @@ class TabTutorial extends Component {
                 <Tab label="테스트" component = {Link} to="/log" {...this.a11yProps(1)} />
                 <Tab label="알림 기록" component = {Link} to="/chart" {...this.a11yProps(2)} />
                 <Tab label="사용 기록" component = {Link} to="/usage-history" {...this.a11yProps(3)} />
+                <Tab label="하이 차트" component = {Link} to="/highchart" {...this.a11yProps(4)}/>
               </Tabs>
             </Grid>
             <Grid>

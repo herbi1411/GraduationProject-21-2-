@@ -9,6 +9,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import { TableContainer } from "@material-ui/core";
 import TablePagination from '@material-ui/core/TablePagination';
+import HighChart from "./HighChart";
 
 
 
@@ -164,7 +165,9 @@ const UseageHistory = ({userObj}) => {
                 onRowsPerPageChange = {handleChangeRowsPerPage}
             />
         </>: "Loading..."}
-    </Paper>);
+        <HighChart datas={logs}/>
+    </Paper>
+    );
 }
 
 export default UseageHistory;

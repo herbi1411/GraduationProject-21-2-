@@ -9,6 +9,7 @@ import TabTutorial from "routes/taptutorials";
 import Test from "routes/Test";
 import Chart from "routes/Chart";
 import UseageHistory from "routes/UseageHistory";
+import HighChart from "routes/HighChart";
 
 const AppRouter = ({isLoggedIn, userObj})=>{
     return (
@@ -34,6 +35,9 @@ const AppRouter = ({isLoggedIn, userObj})=>{
                 </Route>
                 <Route exact path = "/usage-history">
                     <UseageHistory userObj = {userObj}/>
+                </Route>
+                <Route exact path = "/highchart">
+                    <HighChart/>
                 </Route>
                 </>
                 :
