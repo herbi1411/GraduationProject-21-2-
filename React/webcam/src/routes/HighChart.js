@@ -5,19 +5,19 @@ import HighChartsReact from 'highcharts-react-official';
 const HighChart = (datas) =>{
     const initialOptions = {
         title: {
-            text: "눈 깜빡임 평균 이용 시간",
+            text: "평균 눈깜빡임 간격",
         },
         // chart: {
         //     type: "bar",
         // },
         yAxis: {
             title:{
-                text: "평균 눈깜빡임 시간"
+                text: "초"
             }
         },
         xAxis:{
             title:{
-                text: "일시"
+                text: "번호"
             }
             // accessibility:{
             //     rangeDescription: "Range: 1 to 10 ", 
@@ -39,35 +39,57 @@ const HighChart = (datas) =>{
         }
     },[]);
     const saveDatas = () => {
-        setOptions({
-            ...options,
-            series: [{
-                name: "Say Yes",
-                // data:[1000,2000,3000,4000,5000],
-                data:[{
-                    x: 1,
-                    y: 9,
-                    name: "Points1"
-                },{
-                    x: 2,
-                    y: 30,
-                    name: "Points2"
-                },{
-                    x: 3,
-                    y: 21,
-                    name: "Points3"
-                },{
-                    x: 4,
-                    y: 40,
-                    name: "Points4"
-                },{
-                    x: 5,
-                    y: 55,
-                    name: "Points5"
-                },
-                ]
-            }]       
-        });
+        if (datas.datas){
+            let newData = [];
+            let temp = 1;
+            datas.datas.forEach(element => {
+                console.log(parseFloat(element.avg));
+                if(parseFloat(element.avg) != "Infinity"){
+                    newData.push({
+                        // x: element.stime,
+                        x: temp,
+                        y: parseFloat(element.avg)
+                    });
+                    temp +=1;
+                }
+            });
+            setOptions({
+                ...options,
+                series: {
+                    name: "sayYes!!",
+                    data: newData,
+                }
+            });
+        }else{
+            setOptions({
+                ...options,
+                series: [{
+                    name: "Say Yes",
+                    data:[{
+                        x: 1,
+                        y: 9,
+                        name: "Points1"
+                    },{
+                        x: 2,
+                        y: 30,
+                        name: "Points2"
+                    },{
+                        x: 3,
+                        y: 21,
+                        name: "Points3"
+                    },{
+                        x: 4,
+                        y: 40,
+                        name: "Points4"
+                    },{
+                        x: 5,
+                        y: 55,
+                        name: "Points5"
+                    },
+                    ]
+                }]       
+            });
+        }
     }
 
     return (<div>

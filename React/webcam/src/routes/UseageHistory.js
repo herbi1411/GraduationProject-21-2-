@@ -30,7 +30,7 @@ const useStyles = makeStyles({
         maxHeight: 440,
     },
     rows:{
-        "font-family" : "'카페24 당당해', '맑은 고딕', serif",
+        "fontFamily" : "'카페24 당당해', '맑은 고딕', serif",
     }
 });
 
@@ -165,7 +165,7 @@ const UseageHistory = ({userObj}) => {
                 onRowsPerPageChange = {handleChangeRowsPerPage}
             />
         </>: "Loading..."}
-        <HighChart datas={logs}/>
+        {logs &&  <HighChart datas={logs}/> }
     </Paper>
     );
 }

@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Toolbar, Grid } from '@material-ui/core';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import authService from "fbase";
 
 class TabTutorial extends Component {
@@ -50,8 +51,8 @@ class TabTutorial extends Component {
   }
   render() {
     return (
-      <div>
-        <AppBar position="static">
+      <Box>
+        <AppBar position="static" color="secondary">
           <Toolbar>
             <Grid item xs>
               <Tabs value={this.state.value} onChange={this.handleChange} aria-label="simple tabs example">
@@ -62,8 +63,11 @@ class TabTutorial extends Component {
                 <Tab label="하이 차트" component = {Link} to="/highchart" {...this.a11yProps(4)}/>
               </Tabs>
             </Grid>
-            <Grid>
-              <Button color="inherit" size="small" onClick={this.onLogOutClick}>Log out</Button>
+            <Grid item>
+              <AccountCircleIcon/>
+            </Grid>
+            <Grid item>
+              <Button color="inherit" size="small" onClick={this.onLogOutClick} variant="outlined">Log out</Button>
             </Grid>
           </Toolbar>
         </AppBar>
@@ -78,7 +82,7 @@ class TabTutorial extends Component {
         <TabPanel value={this.state.value} index={2}>
           Item Three
       </TabPanel> */}
-      </div>
+      </Box>
     );
   }
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Webcam from "react-webcam";
 import axios from "axios";
 import "./webcam.css";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, Container } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
@@ -47,15 +47,18 @@ const WebcamCapture = ({userObj}) => {
         const id = setInterval(capture,150);
         return async() => {
           clearInterval(id);
-          endRecordAt = Date.now();
-          const avgBlinkPeriod = ((endRecordAt - startRecordAt)/tempBlinkCount);
-          await dbService.collection("usageHistory").add({
-            uid: userObj.uid,
-            startRecordAt,
-            blinkCount: tempBlinkCount,
-            endRecordAt,
-            avgBlinkPeriod,
-          });
+          if(tempBlinkCount != 0){
+              endRecordAt = Date.now();
+              const avgBlinkPeriod = ((endRecordAt - startRecordAt)/tempBlinkCount);
+              await dbService.collection("usageHistory").add({
+                uid: userObj.uid,
+                startRecordAt,
+                blinkCount: tempBlinkCount,
+                endRecordAt,
+                avgBlinkPeriod,
+              });
+          }
+
         }
       }
     },[timerOn]);
@@ -111,8 +114,7 @@ const WebcamCapture = ({userObj}) => {
 
     return (
         <>
-          <Grid item xs>
-            <Grid>
+          <Container fixed maxWidth = "xs">
                 {timerOn && <img src={returnImgSrc}/>}
                 <Webcam
                   style = {getWebCamStyleObject()}
@@ -124,25 +126,27 @@ const WebcamCapture = ({userObj}) => {
                   screenshotFormat="image/jpeg"
                   width={480}
                   videoConstraints={videoConstraints}
+                  justifycontent="center"
                 />
-            </Grid>
-            <FormControl component="fieldset" variant="standard">
-              <FormLabel component="legend" className={classes.label}>설정</FormLabel>
-              <FormGroup >
-                <FormControlLabel 
-                  label= {<Typography className={classes.label}>눈 깜빡임 추적 시작</Typography>}
-                  labelPlacement="start"
-                  control={
-                    <Switch checked={timerOn} onChange={toggleSetTimerOn} name="timerOn" color="secondary"/>
-                  }
-                />
-              </FormGroup>
-              <FormHelperText>Be careful</FormHelperText>
-          </FormControl> 
-          {/* <button onClick={toggleSetTimerOn}>Capture</button> */}
-          </Grid>
-          <h5>Blink Count : {blinkCount}</h5>
-          <h5>평균 눈깜빡임 시간 : {avgBlinkTime}</h5>
+          </Container>
+          <Container fixed maxWidth="xs">
+              <FormControl component="fieldset" variant="standard">
+                    <FormLabel component="legend" className={classes.label}>설정</FormLabel>
+                      <FormGroup >
+                        <FormControlLabel 
+                          label= {<Typography className={classes.label}>눈 깜빡임 추적 시작</Typography>}
+                          labelPlacement="start"
+                          control={
+                            <Switch checked={timerOn} onChange={toggleSetTimerOn} name="timerOn" color="secondary"/>
+                          }
+                        />
+                      </FormGroup>
+                    {/* <FormHelperText>Be careful</FormHelperText> */}
+              </FormControl> 
+              {/* <button onClick={toggleSetTimerOn}>Capture</button> */}
+              <h5>Blink Count : {blinkCount}</h5>
+              <h5>평균 눈깜빡임 시간 : {avgBlinkTime}</h5>
+          </Container>
         </>
     );
 };
