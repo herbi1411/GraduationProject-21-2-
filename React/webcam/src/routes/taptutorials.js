@@ -7,17 +7,13 @@ import Box from '@material-ui/core/Box';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Toolbar, Grid } from '@material-ui/core';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import IconButton from '@mui/material/IconButton';
 import authService from "fbase";
 
 class TabTutorial extends Component {
   constructor(props) {
     super(props);
-    const currentPath = this.props.location.pathname;
-    let value = 0;
-    if (currentPath === '/log') value = 1;
-    else if (currentPath === '/chart') value = 2;
-    else if (currentPath === '/usage-history') value = 3;
-    else if (currentPath === '/highchart') value = 4;
+    const value = this.getValue();
     this.state = {
       value
     }
@@ -27,7 +23,7 @@ class TabTutorial extends Component {
       id: `simple-tab-${index}`,
       'aria-controls': `simple-tabpanel-${index}`,
       style: {
-        "font-family": "'카페24 당당해', '맑은 고딕', serif",
+        "fontFamily": "'카페24 당당해', '맑은 고딕', serif",
       },
     };
   }
@@ -49,13 +45,25 @@ class TabTutorial extends Component {
     authService.signOut();
     this.props.history.push('/');
   }
+  onProfileClick = (event) => {
+    this.props.history.push('/profile');
+  }
+  getValue = () => {
+    const currentPath = this.props.location.pathname;
+    let value = 0;
+    if (currentPath === '/log') value = 1;
+    else if (currentPath === '/chart') value = 2;
+    else if (currentPath === '/usage-history') value = 3;
+    else if (currentPath === '/highchart') value = 4;
+    return value;
+  }
   render() {
     return (
       <Box>
         <AppBar position="static" color="secondary">
           <Toolbar>
             <Grid item xs>
-              <Tabs value={this.state.value} onChange={this.handleChange} aria-label="simple tabs example">
+              <Tabs value={this.getValue()} onChange={this.handleChange} aria-label="simple tabs example">
                 <Tab label="눈 깜빡임 탐지" component = {Link} to="/webcam" {...this.a11yProps(0)} />
                 <Tab label="테스트" component = {Link} to="/log" {...this.a11yProps(1)} />
                 <Tab label="알림 기록" component = {Link} to="/chart" {...this.a11yProps(2)} />
@@ -63,12 +71,16 @@ class TabTutorial extends Component {
                 <Tab label="하이 차트" component = {Link} to="/highchart" {...this.a11yProps(4)}/>
               </Tabs>
             </Grid>
-            <Grid item>
-              <AccountCircleIcon/>
-            </Grid>
-            <Grid item>
-              <Button color="inherit" size="small" onClick={this.onLogOutClick} variant="outlined">Log out</Button>
-            </Grid>
+            {/* <div style = {{"padding-right": "50px"}}> */}
+              <Grid item>
+                <IconButton aria-label="profile" onClick = {this.onProfileClick}>
+                    <AccountCircleIcon fontSize = "large"/>
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <Button color="inherit" size="small" onClick={this.onLogOutClick} variant="outlined">Log out</Button>
+              </Grid>
+            {/* </div> */}
           </Toolbar>
         </AppBar>
 

@@ -43,7 +43,6 @@ const HighChart = (datas) =>{
             let newData = [];
             let temp = 1;
             datas.datas.forEach(element => {
-                console.log(parseFloat(element.avg));
                 if(parseFloat(element.avg) != "Infinity"){
                     newData.push({
                         // x: element.stime,

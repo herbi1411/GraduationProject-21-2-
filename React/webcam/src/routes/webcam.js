@@ -18,7 +18,7 @@ const videoConstraints = {
   };
   const useStyles = makeStyles({
     label:{
-        "font-family" : "'카페24 당당해', '맑은 고딕', serif",
+        "fontFamily" : "'카페24 당당해', '맑은 고딕', serif",
     }
 });
 
