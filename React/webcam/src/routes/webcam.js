@@ -37,7 +37,9 @@ const WebcamCapture = ({userObj}) => {
 
     const setPrevBlink = (now) => {prevBlink = now;}
     const getWebCamStyleObject = () =>{
-      return timerOn ? {visibility: "hidden"} : {visibility: "visible"};
+      // return timerOn ? {visibility: "hidden"} : {visibility: "visible"};
+      // return timerOn ? {display: "none"} : {display: "block"};
+      return timerOn ? {visibility: "hidden" , display: "hidden"} : {visibilitiy: "visible", display: "block"};
     };
 
     useEffect(()=>{
@@ -47,18 +49,20 @@ const WebcamCapture = ({userObj}) => {
         const id = setInterval(capture,150);
         return async() => {
           clearInterval(id);
-          if(tempBlinkCount != 0){
-              endRecordAt = Date.now();
-              const avgBlinkPeriod = ((endRecordAt - startRecordAt)/tempBlinkCount);
-              await dbService.collection("usageHistory").add({
-                uid: userObj.uid,
-                startRecordAt,
-                blinkCount: tempBlinkCount,
-                endRecordAt,
-                avgBlinkPeriod,
-              });
-          }
-
+          // if(tempBlinkCount != 0){
+          //     endRecordAt = Date.now();
+          //     const avgBlinkPeriod = ((endRecordAt - startRecordAt)/tempBlinkCount);
+          //     await dbService.collection("usageHistory").add({
+          //       uid: userObj.uid,
+          //       startRecordAt,
+          //       blinkCount: tempBlinkCount,
+          //       endRecordAt,
+          //       avgBlinkPeriod,
+          //     });
+          // }
+          tempBlinkCount = 0;
+          setBlinkCount(0);
+          setAvgBlinkTime(0);
         }
       }
     },[timerOn]);
@@ -115,8 +119,7 @@ const WebcamCapture = ({userObj}) => {
     return (
         <>
           <Container fixed maxWidth = "xs">
-                {timerOn && <img src={returnImgSrc}/>}
-                <Webcam
+                {timerOn ? <img src={returnImgSrc}/> : <Webcam
                   style = {getWebCamStyleObject()}
                   className = "ha"
                   audio={false}
@@ -127,7 +130,8 @@ const WebcamCapture = ({userObj}) => {
                   width={480}
                   videoConstraints={videoConstraints}
                   justifycontent="center"
-                />
+                  />
+                }
           </Container>
           <Container fixed maxWidth="xs">
               <FormControl component="fieldset" variant="standard">
@@ -146,6 +150,20 @@ const WebcamCapture = ({userObj}) => {
               {/* <button onClick={toggleSetTimerOn}>Capture</button> */}
               <h5>Blink Count : {blinkCount}</h5>
               <h5>평균 눈깜빡임 시간 : {avgBlinkTime}</h5>
+          </Container>
+          <Container>
+            {timerOn && <Webcam
+                  style = {getWebCamStyleObject()}
+                  className = "ha"
+                  audio={false}
+                  height={320}
+                  mirrored = {true}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  width={480}
+                  videoConstraints={videoConstraints}
+                  justifycontent="center"
+                  />}
           </Container>
         </>
     );
