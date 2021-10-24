@@ -29,9 +29,21 @@ const useStyles = makeStyles({
     container:{
         maxHeight: 440,
     },
-    rows:{
+    thcell:{
+        backgroundColor: "beige",
+    },
+    tcell:{
         "fontFamily" : "'카페24 당당해', '맑은 고딕', serif",
-    }
+        backgroundColor: "lightgray",
+    },
+    tcell2:{
+        "fontFamily" : "'카페24 당당해', '맑은 고딕', serif",
+    },
+    h5:{
+        textAlign : "center",
+        fontFamily :  "'맑은 고딕', serif",
+        marginTop: "5%"
+    },
 });
 
 const UseageHistory = ({userObj}) => {
@@ -121,11 +133,13 @@ const UseageHistory = ({userObj}) => {
     <Paper className ={classes.root}>
         {logs? <>
             <TableContainer className = {classes.conatiner}>
-                <Table stickyHeader aria-label="sticky table">
-                    <TableHead>
-                        <TableRow >
+                <h5 className = {classes.h5}> 사용 기록</h5>
+                <Table stickyHeader aria-label="sticky table" className = {classes.table}>
+                    <TableHead className = {classes.thead}>
+                        <TableRow className = {classes.throw} >
                             {columns.map((column)=>(
                                 <TableCell
+                                    className={classes.thcell}
                                     key={column.id}
                                     align={column.align}
                                     style={{minWidth: column.minWidth}}
@@ -137,13 +151,14 @@ const UseageHistory = ({userObj}) => {
                     </TableHead>
                     <TableBody>
                         {
-                            logs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((log)=>(
+                            logs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((log,index)=>(
                                 <TableRow hover role="checkbox" tabIndex = {-1} key={log.id}>
                                     {
                                         columns.map((column)=>{
                                             const value = log[column.id];
+                                            const swc = index % 2;
                                             return (
-                                                <TableCell key = {column.id} align={column.align} className ={classes.rows}>
+                                                <TableCell key = {column.id} align={column.align} className ={swc ? classes.tcell : classes.tcell2}>
                                                     {value}
                                                 </TableCell>
                                             );

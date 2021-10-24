@@ -1,24 +1,29 @@
 import React, { useState, useEffect } from "react"
 import Highcharts from 'highcharts';
 import HighChartsReact from 'highcharts-react-official';
+import { Container } from "@material-ui/core";
 
 const HighChart = (datas) =>{
     const initialOptions = {
         title: {
             text: "평균 눈깜빡임 간격",
         },
-        // chart: {
-        //     type: "bar",
-        // },
+        chart: {
+            // type: "bar",
+            backgroundColor:"#E6FBE9",
+        },
         yAxis: {
             title:{
-                text: "초"
-            }
+                text: "초",
+                textAlign: "left",
+                alighn: "high"
+            },
         },
         xAxis:{
             title:{
                 text: "번호"
-            }
+            },
+            tickInterval: 1,
             // accessibility:{
             //     rangeDescription: "Range: 1 to 10 ", 
             // }
@@ -28,7 +33,10 @@ const HighChart = (datas) =>{
             align: 'right',
             verticalAlign: 'middle'
         },
-        series : []
+        series : [{
+            type: "line",
+            color: "#E0A8E9",
+        }],
     }
     const [options,setOptions] = useState(initialOptions);
 
@@ -55,7 +63,7 @@ const HighChart = (datas) =>{
             setOptions({
                 ...options,
                 series: {
-                    name: "sayYes!!",
+                    name: "평균간격",
                     data: newData,
                 }
             });
@@ -91,12 +99,14 @@ const HighChart = (datas) =>{
         }
     }
 
-    return (<div>
+    return (
+    <div style={{marginTop : "5%"}}>
         <HighChartsReact
             highcharts = {Highcharts}
             options = {options}
         />
-    </div>)
+    </div>
+    )
 
 }
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Webcam from "react-webcam";
 import axios from "axios";
 import "./webcam.css";
-import { Grid, Typography, Container } from "@material-ui/core";
+import { Grid, Typography, Container, TextField } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
@@ -17,8 +17,26 @@ const videoConstraints = {
     facingMode: "user"
   };
   const useStyles = makeStyles({
-    label:{
+    flabel:{
         "fontFamily" : "'카페24 당당해', '맑은 고딕', serif",
+        // textAlign : "center",
+    },
+    fclabel:{
+      fontFamily: "'카페24 당당해', '맑은 고딕', serif",
+    },
+    talabel:{
+      textAlign: "left",
+      // marginLeft: "23px",
+      fontFamily: "'카페24 당당해', '맑은 고딕', serif",
+      marginTop: 5,
+      marginLeft: 15,
+    },
+    tField:{
+      width: 60,
+    },
+    sectypo:{
+      marginTop: 3,
+      fontFamily: "'카페24 당당해', '맑은 고딕', serif"
     }
 });
 
@@ -28,12 +46,14 @@ const WebcamCapture = ({userObj}) => {
     const [returnImgSrc,setReturnImgSrc] = useState("");
     const [blinkCount,setBlinkCount] = useState(0);
     const [avgBlinkTime,setAvgBlinkTime] = useState(0);
+    const [alertInterval,setAlertInterval] = useState(10);
 
     const classes = useStyles()
     let prevBlink = Date.now();
     let startRecordAt = Date.now();
     let endRecordAt = Date.now();
     let tempBlinkCount = 0;
+    let shrinkval = 10;
 
     const setPrevBlink = (now) => {prevBlink = now;}
     const getWebCamStyleObject = () =>{
@@ -49,17 +69,17 @@ const WebcamCapture = ({userObj}) => {
         const id = setInterval(capture,150);
         return async() => {
           clearInterval(id);
-          // if(tempBlinkCount != 0){
-          //     endRecordAt = Date.now();
-          //     const avgBlinkPeriod = ((endRecordAt - startRecordAt)/tempBlinkCount);
-          //     await dbService.collection("usageHistory").add({
-          //       uid: userObj.uid,
-          //       startRecordAt,
-          //       blinkCount: tempBlinkCount,
-          //       endRecordAt,
-          //       avgBlinkPeriod,
-          //     });
-          // }
+          if(tempBlinkCount != 0){
+              endRecordAt = Date.now();
+              const avgBlinkPeriod = ((endRecordAt - startRecordAt)/tempBlinkCount);
+              await dbService.collection("usageHistory").add({
+                uid: userObj.uid,
+                startRecordAt,
+                blinkCount: tempBlinkCount,
+                endRecordAt,
+                avgBlinkPeriod,
+              });
+          }
           tempBlinkCount = 0;
           setBlinkCount(0);
           setAvgBlinkTime(0);
@@ -95,7 +115,7 @@ const WebcamCapture = ({userObj}) => {
           //
           const elapsedTime = Date.now() - prevBlink;
           // console.log(elapsedTime);
-          if(elapsedTime >= 10000){
+          if(elapsedTime >= alertInterval * 1000){
             Notification.requestPermission().then(() =>{
               const notification = new Notification("눈을 감아주세요!",{body: "10초동안 눈을 감지 않으셨습니다."});
             }); 
@@ -115,7 +135,18 @@ const WebcamCapture = ({userObj}) => {
         }
         ).catch((err)=>console.log(err));
       }
-
+    const checkSetAlertInterval = (val) => {
+      let target = 0;
+      if(val < 0){
+        target = 0;
+      }else if (val > 30){
+        target = 30;
+      }else{
+        target = val;
+      }
+      setAlertInterval(target);
+      shrinkval = target
+    }
     return (
         <>
           <Container fixed maxWidth = "xs">
@@ -135,15 +166,41 @@ const WebcamCapture = ({userObj}) => {
           </Container>
           <Container fixed maxWidth="xs">
               <FormControl component="fieldset" variant="standard">
-                    <FormLabel component="legend" className={classes.label}>설정</FormLabel>
-                      <FormGroup >
+                    <FormLabel component="legend" className={classes.flabel}>설정</FormLabel>
+                      <FormGroup>
                         <FormControlLabel 
-                          label= {<Typography className={classes.label}>눈 깜빡임 추적 시작</Typography>}
+                          label= {<Typography className={classes.fclabel}>눈 깜빡임 추적 시작</Typography>}
                           labelPlacement="start"
                           control={
                             <Switch checked={timerOn} onChange={toggleSetTimerOn} name="timerOn" color="secondary"/>
                           }
+                          style={{align:"left"}}
                         />
+                        </FormGroup>
+                        <FormGroup>
+                        <Grid container spacing={1}>
+                        <Grid item xs = {7}>
+                          <Typography className={classes.talabel}>알림 간격</Typography>
+                        </Grid>
+                        <Grid item xs = {4}>
+                          <TextField
+                                className= {classes.tField}
+                                id="outlined-number"
+                                // label= {<Typography className={classes.talabel}>알림 간격</Typography>}
+                                type="number"
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                value = {shrinkval}
+                                onChange = {checkSetAlertInterval}
+                                size = "small"
+                                variant = "outlined"
+                            />
+                        </Grid>
+                        <Grid item xs = {1}>
+                        <Typography className = {classes.sectypo}> 초</Typography>
+                        </Grid>
+                        </Grid>
                       </FormGroup>
                     {/* <FormHelperText>Be careful</FormHelperText> */}
               </FormControl> 

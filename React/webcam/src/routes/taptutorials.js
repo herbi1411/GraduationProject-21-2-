@@ -60,10 +60,10 @@ class TabTutorial extends Component {
   render() {
     return (
       <Box>
-        <AppBar position="static" color="secondary">
+        <AppBar position="static" style={{ backgroundColor:"#f2bdf2", color:"black"}} /*color="secondary"*/>
           <Toolbar>
             <Grid item xs>
-              <Tabs value={this.getValue()} onChange={this.handleChange} aria-label="simple tabs example">
+              <Tabs value={this.getValue()} onChange={this.handleChange} aria-label="simple tabs example" variant="fullWidth"> 
                 <Tab label="눈 깜빡임 탐지" component = {Link} to="/webcam" {...this.a11yProps(0)} />
                 <Tab label="테스트" component = {Link} to="/log" {...this.a11yProps(1)} />
                 <Tab label="알림 기록" component = {Link} to="/chart" {...this.a11yProps(2)} />

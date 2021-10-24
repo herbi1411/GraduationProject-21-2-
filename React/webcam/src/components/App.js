@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import WebcamCapture from "../routes/webcam"
 import authService from "../fbase";
 import AppRouter from "./Router";
+import "./App.css";
 function App() {
   const [init,setInit] = useState(false);
   const [isLoggedIn,setIsLoggedin] = useState(false);
