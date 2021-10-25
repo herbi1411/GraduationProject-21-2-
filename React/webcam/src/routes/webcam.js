@@ -46,14 +46,13 @@ const WebcamCapture = ({userObj}) => {
     const [returnImgSrc,setReturnImgSrc] = useState("");
     const [blinkCount,setBlinkCount] = useState(0);
     const [avgBlinkTime,setAvgBlinkTime] = useState(0);
-    const [alertInterval,setAlertInterval] = useState(10);
 
     const classes = useStyles()
     let prevBlink = Date.now();
     let startRecordAt = Date.now();
     let endRecordAt = Date.now();
     let tempBlinkCount = 0;
-    let shrinkval = 10;
+    let alertInterval = 10;
 
     const setPrevBlink = (now) => {prevBlink = now;}
     const getWebCamStyleObject = () =>{
@@ -61,6 +60,9 @@ const WebcamCapture = ({userObj}) => {
       // return timerOn ? {display: "none"} : {display: "block"};
       return timerOn ? {visibility: "hidden" , display: "hidden"} : {visibilitiy: "visible", display: "block"};
     };
+    const getWebCamStyleObject2 = () =>{
+      return {visibility: "hidden" , display: "hidden"};
+    }
 
     useEffect(()=>{
       if(timerOn){
@@ -114,7 +116,8 @@ const WebcamCapture = ({userObj}) => {
 
           //
           const elapsedTime = Date.now() - prevBlink;
-          // console.log(elapsedTime);
+          console.log(elapsedTime);
+          console.log("ALERTINTERVAL:" + alertInterval);
           if(elapsedTime >= alertInterval * 1000){
             Notification.requestPermission().then(() =>{
               const notification = new Notification("눈을 감아주세요!",{body: "10초동안 눈을 감지 않으셨습니다."});
@@ -135,17 +138,19 @@ const WebcamCapture = ({userObj}) => {
         }
         ).catch((err)=>console.log(err));
       }
-    const checkSetAlertInterval = (val) => {
-      let target = 0;
-      if(val < 0){
-        target = 0;
-      }else if (val > 30){
-        target = 30;
-      }else{
-        target = val;
-      }
-      setAlertInterval(target);
-      shrinkval = target
+    const setAlertInterval = (event) => {
+      // let target = 0;
+      // if(val < 0){
+      //   target = 0;
+      // }else if (val > 30){
+      //   target = 30;
+      // }else{
+      //   target = val;
+      // }
+      // shrinkval = target
+      console.log(event.target.value);
+      alertInterval = event.target.value;
+      console.log("ALERTINTERVAL:" + alertInterval);
     }
     return (
         <>
@@ -156,13 +161,27 @@ const WebcamCapture = ({userObj}) => {
                   audio={false}
                   height={320}
                   mirrored = {true}
-                  ref={webcamRef}
+                  // ref={webcamRef}
                   screenshotFormat="image/jpeg"
                   width={480}
                   videoConstraints={videoConstraints}
                   justifycontent="center"
                   />
                 }
+                  {/* {timerOn && <img src={returnImgSrc}/>} 
+                  <Webcam
+                  style = {getWebCamStyleObject()}
+                  className = "ha"
+                  audio={false}
+                  height={320}
+                  mirrored = {true}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  width={480}
+                  videoConstraints={videoConstraints}
+                  justifycontent="center"
+                  /> */}
+
           </Container>
           <Container fixed maxWidth="xs">
               <FormControl component="fieldset" variant="standard">
@@ -188,11 +207,13 @@ const WebcamCapture = ({userObj}) => {
                                 id="outlined-number"
                                 // label= {<Typography className={classes.talabel}>알림 간격</Typography>}
                                 type="number"
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                value = {shrinkval}
-                                onChange = {checkSetAlertInterval}
+                                // InputLabelProps={{
+                                //   shrink: true,
+                                // }}
+                                // value = {shrinkval}
+                                onChange = {setAlertInterval}
+                                inputProps={{ max: 20, min: 3}}
+                                defaultValue = {10}
                                 size = "small"
                                 variant = "outlined"
                             />
@@ -209,7 +230,7 @@ const WebcamCapture = ({userObj}) => {
               <h5>평균 눈깜빡임 시간 : {avgBlinkTime}</h5>
           </Container>
           <Container>
-            {timerOn && <Webcam
+            {/* {timerOn && <Webcam
                   style = {getWebCamStyleObject()}
                   className = "ha"
                   audio={false}
@@ -220,7 +241,19 @@ const WebcamCapture = ({userObj}) => {
                   width={480}
                   videoConstraints={videoConstraints}
                   justifycontent="center"
-                  />}
+                  />} */}
+            <Webcam
+                  style = {getWebCamStyleObject2()}
+                  className = "ha"
+                  audio={false}
+                  height={320}
+                  mirrored = {true}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  width={480}
+                  videoConstraints={videoConstraints}
+                  justifycontent="center"
+                  />
           </Container>
         </>
     );
