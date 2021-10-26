@@ -46,13 +46,14 @@ const WebcamCapture = ({userObj}) => {
     const [returnImgSrc,setReturnImgSrc] = useState("");
     const [blinkCount,setBlinkCount] = useState(0);
     const [avgBlinkTime,setAvgBlinkTime] = useState(0);
+    const [alertInterval,setAlertInterval] = useState(10);
 
     const classes = useStyles()
     let prevBlink = Date.now();
     let startRecordAt = Date.now();
     let endRecordAt = Date.now();
     let tempBlinkCount = 0;
-    let alertInterval = 10;
+    // let alertInterval = 10;
 
     const setPrevBlink = (now) => {prevBlink = now;}
     const getWebCamStyleObject = () =>{
@@ -120,7 +121,7 @@ const WebcamCapture = ({userObj}) => {
           console.log("ALERTINTERVAL:" + alertInterval);
           if(elapsedTime >= alertInterval * 1000){
             Notification.requestPermission().then(() =>{
-              const notification = new Notification("눈을 감아주세요!",{body: "10초동안 눈을 감지 않으셨습니다."});
+              const notification = new Notification("눈을 감아주세요!",{body: `${alertInterval}초동안 눈을 감지 않으셨습니다.`});
             }); 
             setPrevBlink(Date.now());
           }
@@ -138,7 +139,7 @@ const WebcamCapture = ({userObj}) => {
         }
         ).catch((err)=>console.log(err));
       }
-    const setAlertInterval = (event) => {
+    const controlSetAlertInterval = (event) => {
       // let target = 0;
       // if(val < 0){
       //   target = 0;
@@ -149,7 +150,7 @@ const WebcamCapture = ({userObj}) => {
       // }
       // shrinkval = target
       console.log(event.target.value);
-      alertInterval = event.target.value;
+      setAlertInterval(event.target.value);
       console.log("ALERTINTERVAL:" + alertInterval);
     }
     return (
@@ -211,9 +212,10 @@ const WebcamCapture = ({userObj}) => {
                                 //   shrink: true,
                                 // }}
                                 // value = {shrinkval}
-                                onChange = {setAlertInterval}
+                                onChange = {controlSetAlertInterval}
                                 inputProps={{ max: 20, min: 3}}
                                 defaultValue = {10}
+                                disabled = {timerOn}
                                 size = "small"
                                 variant = "outlined"
                             />
