@@ -10,6 +10,7 @@ import Test from "routes/Test";
 import Chart from "routes/Chart";
 import UseageHistory from "routes/UseageHistory";
 import HighChart from "routes/HighChart";
+import AlertHistory from "routes/AlertHistory";
 
 const AppRouter = ({isLoggedIn, userObj})=>{
     return (
@@ -30,8 +31,11 @@ const AppRouter = ({isLoggedIn, userObj})=>{
                 <Route exact path = "/log">
                     <Test/>
                 </Route>
-                <Route exact path = "/chart">
+                {/* <Route exact path = "/chart">
                     <Chart userObj = {userObj}/>
+                </Route> */}
+                <Route exact path = "/alertHistory">
+                    <AlertHistory  userObj = {userObj}/>
                 </Route>
                 <Route exact path = "/usage-history">
                     <UseageHistory userObj = {userObj}/>

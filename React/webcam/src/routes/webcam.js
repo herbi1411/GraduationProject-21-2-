@@ -47,12 +47,14 @@ const WebcamCapture = ({userObj}) => {
     const [blinkCount,setBlinkCount] = useState(0);
     const [avgBlinkTime,setAvgBlinkTime] = useState(0);
     const [alertInterval,setAlertInterval] = useState(10);
+    const [alertCount, setAlertCount] = useState(0);
 
     const classes = useStyles()
     let prevBlink = Date.now();
     let startRecordAt = Date.now();
     let endRecordAt = Date.now();
     let tempBlinkCount = 0;
+    let tempAlertCount = 0;
     // let alertInterval = 10;
 
     const setPrevBlink = (now) => {prevBlink = now;}
@@ -81,6 +83,7 @@ const WebcamCapture = ({userObj}) => {
                 blinkCount: tempBlinkCount,
                 endRecordAt,
                 avgBlinkPeriod,
+                alertCount: tempAlertCount,
               });
           }
           tempBlinkCount = 0;
@@ -124,6 +127,8 @@ const WebcamCapture = ({userObj}) => {
               const notification = new Notification("눈을 감아주세요!",{body: `${alertInterval}초동안 눈을 감지 않으셨습니다.`});
             }); 
             setPrevBlink(Date.now());
+            tempAlertCount += 1;
+            setAlertCount(prev=>prev+1);
           }
           //
 
@@ -228,8 +233,9 @@ const WebcamCapture = ({userObj}) => {
                     {/* <FormHelperText>Be careful</FormHelperText> */}
               </FormControl> 
               {/* <button onClick={toggleSetTimerOn}>Capture</button> */}
-              <h5>Blink Count : {blinkCount}</h5>
+              <h5>눈 깜빡임 횟수 : {blinkCount}</h5>
               <h5>평균 눈깜빡임 시간 : {avgBlinkTime}</h5>
+              <h5>일림 횟수 : {alertCount}</h5>
           </Container>
           <Container>
             {/* {timerOn && <Webcam

@@ -51,10 +51,10 @@ class TabTutorial extends Component {
   getValue = () => {
     const currentPath = this.props.location.pathname;
     let value = 0;
-    if (currentPath === '/log') value = 1;
-    else if (currentPath === '/chart') value = 2;
-    else if (currentPath === '/usage-history') value = 3;
-    else if (currentPath === '/highchart') value = 4;
+    // if (currentPath === '/log') value = 1;
+    if (currentPath === '/alertHistory') value = 1;
+    else if (currentPath === '/usage-history') value = 2;
+    // else if (currentPath === '/highchart') value = 4;
     return value;
   }
   render() {
@@ -65,10 +65,10 @@ class TabTutorial extends Component {
             <Grid item xs>
               <Tabs value={this.getValue()} onChange={this.handleChange} aria-label="simple tabs example" variant="fullWidth"> 
                 <Tab label="눈 깜빡임 탐지" component = {Link} to="/webcam" {...this.a11yProps(0)} />
-                <Tab label="테스트" component = {Link} to="/log" {...this.a11yProps(1)} />
-                <Tab label="알림 기록" component = {Link} to="/chart" {...this.a11yProps(2)} />
-                <Tab label="사용 기록" component = {Link} to="/usage-history" {...this.a11yProps(3)} />
-                <Tab label="하이 차트" component = {Link} to="/highchart" {...this.a11yProps(4)}/>
+                {/* <Tab label="테스트" component = {Link} to="/log" {...this.a11yProps(1)} /> */}
+                <Tab label="알림 기록" component = {Link} to="/alertHistory" {...this.a11yProps(1)} />
+                <Tab label="사용 기록" component = {Link} to="/usage-history" {...this.a11yProps(2)} />
+                {/* <Tab label="하이 차트" component = {Link} to="/highchart" {...this.a11yProps(4)}/> */}
               </Tabs>
             </Grid>
             {/* <div style = {{"padding-right": "50px"}}> */}
