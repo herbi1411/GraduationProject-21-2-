@@ -11,6 +11,7 @@ import Chart from "routes/Chart";
 import UseageHistory from "routes/UseageHistory";
 import HighChart from "routes/HighChart";
 import AlertHistory from "routes/AlertHistory";
+import Tips from "routes/Tips";
 
 const AppRouter = ({isLoggedIn, userObj})=>{
     return (
@@ -40,9 +41,12 @@ const AppRouter = ({isLoggedIn, userObj})=>{
                 <Route exact path = "/usage-history">
                     <UseageHistory userObj = {userObj}/>
                 </Route>
-                <Route exact path = "/highchart">
-                    <HighChart/>
+                <Route exact path = "/tips">
+                    <Tips/>
                 </Route>
+                {/* <Route exact path = "/highchart">
+                    <HighChart/>
+                </Route> */}
                 </>
                 :
                 <Route exact path = "/">
