@@ -26,10 +26,14 @@ const useStyles = makeStyles({
 const steps = [
   {
     label: 'Select campaign settings',
-    description: `Try out different ad text to see what brings in the most customers,
+    description: `    Try out different ad text to see what brings in the most customers,
     and learn how to enhance your ads using features like ad extensions.
     If you run into any problems with your ads, find out how to tell if
     they're running and how to resolve approval issues.
+
+
+
+
     Try out different ad text to see what brings in the most customers,
     and learn how to enhance your ads using features like ad extensions.
     If you run into any problems with your ads, find out how to tell if
@@ -116,19 +120,23 @@ const Tips = () => {
             </Grid>
             <Grid item xs={8} p = {10}>
                 <div style={{paddingLeft: 20, margin: 0}}>
-                    {steps[activeStep].description}
+                    <Typography component="pre">
+                        {steps[activeStep].description}
+                    </Typography>
                 </div>
             </Grid>
         </Grid>
         {/* {steps[activeStep].description} */}
         </Box>
         <MobileStepper
-        variant="text"
+        // variant="text"
+        variant="dots"
         steps={maxSteps}
         position="static"
         activeStep={activeStep}
         nextButton={
             <Button
+            color="secondary"
             size="small"
             onClick={handleNext}
             disabled={activeStep === maxSteps - 1}
@@ -136,13 +144,14 @@ const Tips = () => {
             Next
             {theme.direction === 'rtl' ? (
                 <KeyboardArrowLeft />
-            ) : (
-                <KeyboardArrowRight />
-            )}
+                ) : (
+                    <KeyboardArrowRight />
+                    )}
             </Button>
         }
         backButton={
-            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+            <Button size="small" onClick={handleBack} disabled={activeStep === 0} color="secondary">
+            
             {theme.direction === 'rtl' ? (
                 <KeyboardArrowRight />
             ) : (
