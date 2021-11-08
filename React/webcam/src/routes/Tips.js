@@ -28,6 +28,8 @@ const useStyles = makeStyles({
         minHeight: 420,
         padding: "50px 20px", 
         whiteSpace: "pre-line",
+        display: "table-cell",
+        verticalAlign: "middle",
     },
     hname:{
         "fontFamily": "'카페24 당당해', '맑은 고딕', serif",
