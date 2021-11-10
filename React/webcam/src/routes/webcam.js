@@ -19,14 +19,12 @@ const videoConstraints = {
   const useStyles = makeStyles({
     flabel:{
         "fontFamily" : "'카페24 당당해', '맑은 고딕', serif",
-        // textAlign : "center",
     },
     fclabel:{
       fontFamily: "'카페24 당당해', '맑은 고딕', serif",
     },
     talabel:{
       textAlign: "left",
-      // marginLeft: "23px",
       fontFamily: "'카페24 당당해', '맑은 고딕', serif",
       marginTop: 5,
       marginLeft: 15,
@@ -55,12 +53,9 @@ const WebcamCapture = ({userObj}) => {
     let endRecordAt = Date.now();
     let tempBlinkCount = 0;
     let tempAlertCount = 0;
-    // let alertInterval = 10;
 
     const setPrevBlink = (now) => {prevBlink = now;}
     const getWebCamStyleObject = () =>{
-      // return timerOn ? {visibility: "hidden"} : {visibility: "visible"};
-      // return timerOn ? {display: "none"} : {display: "block"};
       return timerOn ? {visibility: "hidden" , display: "hidden"} : {visibilitiy: "visible", display: "block"};
     };
     const getWebCamStyleObject2 = () =>{
@@ -118,7 +113,6 @@ const WebcamCapture = ({userObj}) => {
           const isBlink = response.data.pred;
           setReturnImgSrc(returnImageSrc);
 
-          //
           const elapsedTime = Date.now() - prevBlink;
           console.log(elapsedTime);
           console.log("ALERTINTERVAL:" + alertInterval);
@@ -130,7 +124,6 @@ const WebcamCapture = ({userObj}) => {
             tempAlertCount += 1;
             setAlertCount(prev=>prev+1);
           }
-          //
 
           if(isBlink){
             if(elapsedTime >= 2000){
@@ -145,15 +138,6 @@ const WebcamCapture = ({userObj}) => {
         ).catch((err)=>console.log(err));
       }
     const controlSetAlertInterval = (event) => {
-      // let target = 0;
-      // if(val < 0){
-      //   target = 0;
-      // }else if (val > 30){
-      //   target = 30;
-      // }else{
-      //   target = val;
-      // }
-      // shrinkval = target
       console.log(event.target.value);
       setAlertInterval(event.target.value);
       console.log("ALERTINTERVAL:" + alertInterval);
@@ -167,27 +151,12 @@ const WebcamCapture = ({userObj}) => {
                   audio={false}
                   height={320}
                   mirrored = {true}
-                  // ref={webcamRef}
                   screenshotFormat="image/jpeg"
                   width={480}
                   videoConstraints={videoConstraints}
                   justifycontent="center"
                   />
                 }
-                  {/* {timerOn && <img src={returnImgSrc}/>} 
-                  <Webcam
-                  style = {getWebCamStyleObject()}
-                  className = "ha"
-                  audio={false}
-                  height={320}
-                  mirrored = {true}
-                  ref={webcamRef}
-                  screenshotFormat="image/jpeg"
-                  width={480}
-                  videoConstraints={videoConstraints}
-                  justifycontent="center"
-                  /> */}
-
           </Container>
           <Container fixed maxWidth="xs">
               <FormControl component="fieldset" variant="standard">
@@ -211,12 +180,7 @@ const WebcamCapture = ({userObj}) => {
                           <TextField
                                 className= {classes.tField}
                                 id="outlined-number"
-                                // label= {<Typography className={classes.talabel}>알림 간격</Typography>}
                                 type="number"
-                                // InputLabelProps={{
-                                //   shrink: true,
-                                // }}
-                                // value = {shrinkval}
                                 onChange = {controlSetAlertInterval}
                                 inputProps={{ max: 20, min: 3}}
                                 defaultValue = {10}
@@ -230,26 +194,12 @@ const WebcamCapture = ({userObj}) => {
                         </Grid>
                         </Grid>
                       </FormGroup>
-                    {/* <FormHelperText>Be careful</FormHelperText> */}
               </FormControl> 
-              {/* <button onClick={toggleSetTimerOn}>Capture</button> */}
               <h5>눈 깜빡임 횟수 : {blinkCount}</h5>
               <h5>평균 눈깜빡임 시간 : {avgBlinkTime}</h5>
               <h5>일림 횟수 : {alertCount}</h5>
           </Container>
           <Container>
-            {/* {timerOn && <Webcam
-                  style = {getWebCamStyleObject()}
-                  className = "ha"
-                  audio={false}
-                  height={320}
-                  mirrored = {true}
-                  ref={webcamRef}
-                  screenshotFormat="image/jpeg"
-                  width={480}
-                  videoConstraints={videoConstraints}
-                  justifycontent="center"
-                  />} */}
             <Webcam
                   style = {getWebCamStyleObject2()}
                   className = "ha"
